@@ -1,89 +1,76 @@
-(page "index.html"
-	(:require
-		[new-layout.rpc :as rpc]
-		[tailrecursion.hoplon.reload :refer [reload-all]]))
-
-(reload-all 1000)
+(page "index.html")
 
 (defelem main-content [{:keys [is-mobile]}]
-	(div :class "ui grid"
-		(div :class "twelve wide column"
-			:toggle (not is-mobile)
-				(div :class "ui inverted red segment" :style "padding: 1rem 2rem;"
-			      (h1 "Main content")))
-		(div :class "sixteen wide column"
-			:toggle is-mobile
-				(div :class "ui inverted red segment" :style "padding: 1rem 2rem;"
-			      (h1 "Main content")))
-
-		)
-		
-	)
+  (div :class "ui grid"
+       (div :class "twelve wide column"
+            :toggle (not is-mobile)
+            (div :class "ui inverted red segment" :style "padding: 1rem 2rem;"
+                 (h1 "Main content")))
+       (div :class "sixteen wide column"
+            :toggle is-mobile
+            (div :class "ui inverted red segment" :style "padding: 1rem 2rem;"
+                 (h1 "Main content")))))
 
 (defelem top-nav [{:keys [:is-mobile menu-visble] :or {is-mobile false}}]
-	(div :class "ui padded page grid"
-		  	(div :class "ui fixed  fluid three item main menu"
-		  		:style "z-index: 200; padding: 0 1rem !important;"
-		  		(div :class "ui padded grid"
-		  			(a :class "launch item"
-		  				:toggle is-mobile
-		  				:click #(swap! menu-visble not)
-		  				(i :class "content icon")
-		  				"Menu")
-						(a :class "borderless vertically fitted item" 
-							(img :class "ui tiny image" :style "margin:0 1em;"
-							 :src "http://www.exiconglobal.com/images/exicon-logo.png"))
-						(a :class "borderless item"
-							(div :class "ui mini icon input"
-								(input :type "text" :placeholder "Search...")
-								(i :class "search icon")))
-							
-						#_(div :class "right vertically borderless item"
-							:toggle (not is-mobile)
-							(a :class "ui mini teal button" "Log out"))
-						(div :class "borderless item"
-							:style "text-align:right !important;"
-							:toggle (not is-mobile)
-							 "Laura S"
-							(i :class "dropdown icon")
-							#_(a :class "ui mini teal button" "Log out")))))
-	)
+  (div :class "ui padded page grid"
+       (div :class "ui fixed fluid three item main menu"
+            :style "z-index: 200; padding: 0 1rem !important;"
+            (div :class "ui padded grid"
+                 (a :class "launch item"
+                    :toggle is-mobile
+                    :click #(swap! menu-visble not)
+                    (i :class "content icon")
+                    "Menu")
+                 (a :class "borderless vertically fitted item"
+                    (img :class "ui tiny image" :style "margin:0 1em;"
+                         :src "http://www.exiconglobal.com/images/exicon-logo.png"))
+                 (a :class "borderless item"
+                    (div :class "ui mini icon input"
+                         (input :type "text" :placeholder "Search...")
+                         (i :class "search icon")))
+                 #_(div :class "right vertically borderless item"
+                        :toggle (not is-mobile)
+                        (a :class "ui mini teal button" "Log out"))
+                 (div :class "borderless item"
+                      :style "text-align:right !important;"
+                      :toggle (not is-mobile)
+                      "Laura S"
+                      (i :class "dropdown icon")
+                      #_(a :class "ui mini teal button" "Log out"))))))
 
-(defelem left-nav [{:keys [is-mobile is-tablet menu-visble] 
-	:or {is-mobile false is-tablet false}}]
-	(div :class "ui left vertical uncover inverted white sidebar menu"
-		:do-class (cell= {:visible (if is-mobile menu-visble true)
-							:thin is-tablet
-							:overlay is-mobile})
-		(div :class "ui padded page grid" :style "padding-right:0; padding-top:2.5rem;"
-			(a :class "link active item" "Left Menu 1")
-			(a :class "link item" "Left Menu 2")
-			(a :class "link item" "Left Menu 3")))
-	)
+(defelem left-nav [{:keys [is-mobile is-tablet menu-visble]
+                    :or {is-mobile false is-tablet false}}]
+  (div :class "ui left vertical uncover inverted white sidebar menu"
+       :do-class (cell= {:visible (if is-mobile menu-visble true)
+                         :thin is-tablet
+                         :overlay is-mobile})
+       (div :class "ui padded page grid"
+            :style "padding-right:0; padding-top:2.5rem;"
+            (a :class "link item" "Left Menu 1")
+            (a :class "link item" "Left Menu 2")
+            (a :class "link item" "Left Menu 3"))))
 
-(defelem test-layout [{:keys [is-mobile is-tablet] :or {is-mobile false is-tablet false}}]
-	(let [menu-visble (cell false)]
-		[
-			(top-nav :is-mobile is-mobile :menu-visble menu-visble)
-
-			(left-nav :is-mobile is-mobile :is-tablet is-tablet :menu-visble menu-visble)
-
-			(div :class "pusher" 
-					(main-content :is-mobile is-mobile))
-		]))
-
+(defelem test-layout [{:keys [is-mobile is-tablet]
+                       :or {is-mobile false is-tablet false}}]
+  (let [menu-visble (cell false)]
+    [(top-nav :is-mobile is-mobile
+              :menu-visble menu-visble)
+     (left-nav :is-mobile is-mobile
+               :is-tablet is-tablet
+               :menu-visble menu-visble)
+     (div :class "pusher"
+          (main-content :is-mobile is-mobile))]))
 
 (html
-	(head
-		(meta :name "viewport" :content "width=device-width, initial-scale=1.0"))
-
-	(body :style "background:white;"
-		(div :class "ui padded grid" 
-			(div :class "ui computer only row"
-				(test-layout))
-			(div :class "ui tablet only row"
-				(test-layout :is-tablet true))
-			(div :class "ui mobile only row"
-				(test-layout :is-mobile true))
-			))
-	)
+ (head
+  (link :href "/semantic-ui.inc.css" :rel "stylesheet")
+  (link :href "main.inc.css" :rel "stylesheet")
+  (html-meta :name "viewport" :content "width=device-width, initial-scale=1.0"))
+ (body :style "background:white;"
+       (div :class "ui padded grid"
+            (div :class "ui computer only row"
+                 (test-layout))
+            (div :class "ui tablet only row"
+                 (test-layout :is-tablet true))
+            (div :class "ui mobile only row"
+                 (test-layout :is-mobile true)))))
